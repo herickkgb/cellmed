@@ -1,41 +1,62 @@
 package model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import enums.SistemaOperacional;
 
+@Entity
+@Table(name = "smartphone")
 public class Smartphone {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String brand;
-	private String model;
-	private SistemaOperacional operatingSystem;
-	private String processor;
-	private int ram;
-	private int storage;
-	private double screenSize;
+
+	@Column(nullable = false)
+	private String marca;
+
+	@Column(nullable = false)
+	private String modelo;
+	private SistemaOperacional sistemaOperacional;
+	private String processador;
+	private int memoriaRam;
+	private int armazenamento;
+	private double tamanhoTela;
 	private String camera;
-	private int batteryCapacity;
-	private int releaseYear;
+	private int capacidadeBateria;
+	private int anoLancamento;
+
+	@ManyToOne
+	@JoinColumn(name = "dono_id")
 	private Dono dono;
 
 	public Smartphone() {
-		super();
 	}
 
-	public Smartphone(Long id, String brand, String model, SistemaOperacional operatingSystem, String processor,
-			int ram, int storage, double screenSize, String camera, int batteryCapacity, int releaseYear, Dono dono) {
-		super();
-		this.id = id;
-		this.brand = brand;
-		this.model = model;
-		this.operatingSystem = operatingSystem;
-		this.processor = processor;
-		this.ram = ram;
-		this.storage = storage;
-		this.screenSize = screenSize;
+	public Smartphone(String marca, String modelo, SistemaOperacional sistemaOperacional, String processador,
+			int memoriaRam, int armazenamento, double tamanhoTela, String camera, int capacidadeBateria,
+			int anoLancamento, Dono dono) {
+		this.marca = marca;
+		this.modelo = modelo;
+		this.sistemaOperacional = sistemaOperacional;
+		this.processador = processador;
+		this.memoriaRam = memoriaRam;
+		this.armazenamento = armazenamento;
+		this.tamanhoTela = tamanhoTela;
 		this.camera = camera;
-		this.batteryCapacity = batteryCapacity;
-		this.releaseYear = releaseYear;
+		this.capacidadeBateria = capacidadeBateria;
+		this.anoLancamento = anoLancamento;
 		this.dono = dono;
 	}
+
+	// Getters e Setters
 
 	public Long getId() {
 		return id;
@@ -45,60 +66,60 @@ public class Smartphone {
 		this.id = id;
 	}
 
-	public String getBrand() {
-		return brand;
+	public String getMarca() {
+		return marca;
 	}
 
-	public void setBrand(String brand) {
-		this.brand = brand;
+	public void setMarca(String marca) {
+		this.marca = marca;
 	}
 
-	public String getModel() {
-		return model;
+	public String getModelo() {
+		return modelo;
 	}
 
-	public void setModel(String model) {
-		this.model = model;
+	public void setModelo(String modelo) {
+		this.modelo = modelo;
 	}
 
-	public SistemaOperacional getOperatingSystem() {
-		return operatingSystem;
+	public SistemaOperacional getSistemaOperacional() {
+		return sistemaOperacional;
 	}
 
-	public void setOperatingSystem(SistemaOperacional operatingSystem) {
-		this.operatingSystem = operatingSystem;
+	public void setSistemaOperacional(SistemaOperacional sistemaOperacional) {
+		this.sistemaOperacional = sistemaOperacional;
 	}
 
-	public String getProcessor() {
-		return processor;
+	public String getProcessador() {
+		return processador;
 	}
 
-	public void setProcessor(String processor) {
-		this.processor = processor;
+	public void setProcessador(String processador) {
+		this.processador = processador;
 	}
 
-	public int getRam() {
-		return ram;
+	public int getMemoriaRam() {
+		return memoriaRam;
 	}
 
-	public void setRam(int ram) {
-		this.ram = ram;
+	public void setMemoriaRam(int memoriaRam) {
+		this.memoriaRam = memoriaRam;
 	}
 
-	public int getStorage() {
-		return storage;
+	public int getArmazenamento() {
+		return armazenamento;
 	}
 
-	public void setStorage(int storage) {
-		this.storage = storage;
+	public void setArmazenamento(int armazenamento) {
+		this.armazenamento = armazenamento;
 	}
 
-	public double getScreenSize() {
-		return screenSize;
+	public double getTamanhoTela() {
+		return tamanhoTela;
 	}
 
-	public void setScreenSize(double screenSize) {
-		this.screenSize = screenSize;
+	public void setTamanhoTela(double tamanhoTela) {
+		this.tamanhoTela = tamanhoTela;
 	}
 
 	public String getCamera() {
@@ -109,20 +130,20 @@ public class Smartphone {
 		this.camera = camera;
 	}
 
-	public int getBatteryCapacity() {
-		return batteryCapacity;
+	public int getCapacidadeBateria() {
+		return capacidadeBateria;
 	}
 
-	public void setBatteryCapacity(int batteryCapacity) {
-		this.batteryCapacity = batteryCapacity;
+	public void setCapacidadeBateria(int capacidadeBateria) {
+		this.capacidadeBateria = capacidadeBateria;
 	}
 
-	public int getReleaseYear() {
-		return releaseYear;
+	public int getAnoLancamento() {
+		return anoLancamento;
 	}
 
-	public void setReleaseYear(int releaseYear) {
-		this.releaseYear = releaseYear;
+	public void setAnoLancamento(int anoLancamento) {
+		this.anoLancamento = anoLancamento;
 	}
 
 	public Dono getDono() {
@@ -133,19 +154,19 @@ public class Smartphone {
 		this.dono = dono;
 	}
 
-	public void showDetails() {
-		System.out.println("Marca: " + brand);
-		System.out.println("Modelo: " + model);
-		System.out.println("Sistema Operacional: " + operatingSystem.getNome());
-		System.out.println("Descrição: " + operatingSystem.getDescricao());
-		System.out.println("Última versão: " + operatingSystem.getUltimaVersao());
-		System.out.println("Processador: " + processor);
-		System.out.println("Memória RAM: " + ram + "GB");
-		System.out.println("Armazenamento: " + storage + "GB");
-		System.out.println("Tamanho da Tela: " + screenSize + " polegadas");
+	public void exibirDetalhes() {
+		System.out.println("Marca: " + marca);
+		System.out.println("Modelo: " + modelo);
+		System.out.println("Sistema Operacional: " + sistemaOperacional.getNome());
+		System.out.println("Descrição: " + sistemaOperacional.getDescricao());
+		System.out.println("Última versão: " + sistemaOperacional.getUltimaVersao());
+		System.out.println("Processador: " + processador);
+		System.out.println("Memória RAM: " + memoriaRam + "GB");
+		System.out.println("Armazenamento: " + armazenamento + "GB");
+		System.out.println("Tamanho da Tela: " + tamanhoTela + " polegadas");
 		System.out.println("Câmera: " + camera);
-		System.out.println("Bateria: " + batteryCapacity + "mAh");
-		System.out.println("Ano de Lançamento: " + releaseYear);
+		System.out.println("Bateria: " + capacidadeBateria + "mAh");
+		System.out.println("Ano de Lançamento: " + anoLancamento);
 		System.out.println("Dono: " + dono); // Exibindo o dono do smartphone
 	}
 }

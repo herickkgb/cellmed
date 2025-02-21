@@ -1,29 +1,58 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
-import enums.SistemaOperacional;
 import model.Dono;
+import model.Pessoa;
 import model.Smartphone;
 
+import java.util.List;
+
 public class Main {
-	public static void main(String[] args) {
-		List<Smartphone> smartphones = new ArrayList<>();
 
-		Dono dono = new Dono(1L, smartphones);
+    public static void main(String[] args) {
+        // Substitua "MeuPU" pelo nome da sua unidade de persistência configurada no persistence.xml
+    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("cellmed");
 
-		Smartphone smartphone1 = new Smartphone(1L, "Apple", "iPhone 13", SistemaOperacional.IOS, "A15 Bionic", 6, 128,
-				6.1, "12 MP", 3240, 2021, dono);
-		Smartphone smartphone2 = new Smartphone(2L, "Samsung", "Galaxy S21", SistemaOperacional.ANDROID, "Exynos 2100",
-				8, 128, 6.2, "64 MP", 4000, 2021, dono);
-
-		dono.addSmartphone(smartphone1);
-		dono.addSmartphone(smartphone2);
-
-		for (Smartphone smartphone : dono.getSmartphones()) {
-			smartphone.showDetails();
-			System.out.println("----------------------------");
-		}
-	}
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            // Consultando todas as pessoas
+            List<Pessoa> pessoas = em.createQuery("SELECT p FROM Pessoa p", Pessoa.class).getResultList();
+            System.out.println("=== Pessoas ===");
+            for (Pessoa p : pessoas) {
+                System.out.println("ID: " + p.getId() + " - Nome: " + p.getNome() + " - Email: " + p.getEmail());
+            }
+            
+            // Consultando todos os donos e seus smartphones
+            List<Dono> donos = em.createQuery("SELECT d FROM Dono d", Dono.class).getResultList();
+            System.out.println("\n=== Donos e seus Smartphones ===");
+            for (Dono d : donos) {
+                System.out.println("Dono: " + d.getNome());
+                if (d.getSmartphones() != null) {
+                    d.getSmartphones().forEach(s -> {
+                        System.out.println("\tSmartphone: " + s.getMarca() + " " + s.getModelo());
+                    });
+                } else {
+                    System.out.println("\tNenhum smartphone cadastrado.");
+                }
+            }
+            
+            // Consultando todos os smartphones diretamente
+            List<Smartphone> smartphones = em.createQuery("SELECT s FROM Smartphone s", Smartphone.class).getResultList();
+            System.out.println("\n=== Smartphones ===");
+            for (Smartphone s : smartphones) {
+                System.out.println("ID: " + s.getId() + " - " + s.getMarca() + " " + s.getModelo() +
+                        " - Dono: " + (s.getDono() != null ? s.getDono().getNome() : "Sem dono"));
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            em.close();
+            emf.close();
+        }
+    }
 }

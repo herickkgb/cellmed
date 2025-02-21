@@ -1,44 +1,29 @@
-package model;
+package vo;
 
-import javax.persistence.*;
 import java.util.Objects;
 
-@Entity
-@Table(
-    name = "pessoa",
-    uniqueConstraints = {
-        @UniqueConstraint(name = "uk_pessoa_email", columnNames = {"email"}),
-        @UniqueConstraint(name = "uk_pessoa_cpf", columnNames = {"cpf"}),
-        @UniqueConstraint(name = "uk_pessoa_cnpj", columnNames = {"cnpj"})
-    }
-)
-@Inheritance(strategy = InheritanceType.JOINED)  // Herança JOINED
-public class Pessoa implements IModel{
-    
-	private static final long serialVersionUID = 1L;
+public class PessoaVO {
 
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
-    
-    @Column(name = "nome", nullable = false, length = 150)
     private String nome;
-    
-    @Column(name = "email", nullable = false, length = 100)
     private String email;
-    
-    @Column(name = "telefone", length = 20)
     private String telefone;
-    
-    @Column(name = "endereco", length = 200)
     private String endereco;
-    
-    @Column(name = "cpf", length = 14)
     private String cpf;
-    
-    @Column(name = "cnpj", length = 18)
     private String cnpj;
+
+    // Construtores
+    public PessoaVO() {}
+
+    public PessoaVO(Long id, String nome, String email, String telefone, String endereco, String cpf, String cnpj) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.telefone = telefone;
+        this.endereco = endereco;
+        this.cpf = cpf;
+        this.cnpj = cnpj;
+    }
 
     // Getters e Setters
     public Long getId() {
@@ -97,6 +82,7 @@ public class Pessoa implements IModel{
         this.cnpj = cnpj;
     }
 
+    // hashCode e equals, baseados no id
     @Override
     public int hashCode() {
         return Objects.hash(id);
@@ -110,7 +96,12 @@ public class Pessoa implements IModel{
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Pessoa other = (Pessoa) obj;
+        PessoaVO other = (PessoaVO) obj;
         return Objects.equals(id, other.id);
+    }
+
+    @Override
+    public String toString() {
+        return "PessoaVO [id=" + id + ", nome=" + nome + ", email=" + email + ", telefone=" + telefone + ", endereco=" + endereco + "]";
     }
 }

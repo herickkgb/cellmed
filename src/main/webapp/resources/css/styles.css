@@ -1,0 +1,33 @@
+/* cores principais */
+:root {
+    --primary-blue: #1877F2; /* Azul secundário */
+    --secondary-background: #FFFFFF; /* Fundo branco */
+    --input-background: #F4F4F4; /* Fundo do campo de pesquisa */
+    --input-border: #1877F2; /* Borda do campo de pesquisa */
+    --button-blue: #1877F2; /* Cor do botão de logout */
+}
+
+/* Estilo da barra de navegação */
+.megaMenu {
+    background-color: var(--secondary-background);
+    color: #333333;
+}
+
+/* Estilo dos itens do menu */
+.megaMenu .ui-menuitem {
+    color: var(--primary-blue);
+}
+
+/* Estilo de fundo do botão de logout */
+.ui-button-info {
+    background-color: var(--button-blue);
+    color: #FFFFFF;
+    border-color: var(--button-blue);
+}
+
+/* Estilo do campo de pesquisa */
+.ui-inputtext {
+    background-color: var(--input-background);
+    color: #333333;
+    border-color: var(--input-border);
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Página de Pessoas</title>
+
+<ui:include src="/templates/MenuSuperior.xhtml" />
+
+</head>
+
+<body>
+	<h:form>
+		<p:panel header="Pessoas Registradas"
+			styleClass="ui-panel ui-widget ui-widget-content ui-corner-all ui-shadow">
+			<p:tabView>
+				<p:tab title="Lista de Pessoas" icon="pi pi-users">
+					<p:dataTable var="pessoa" value="#{pessoaBean.pessoas}"
+						paginator="true" rows="10" styleClass="ui-datatable ui-widget"
+						responsive="true" emptyMessage="Nenhuma pessoa encontrada!"
+						style="width: 100%; border-radius: 8px;">
+
+						<p:column headerText="ID" filterBy="#{pessoa.id}">
+							<h:outputText value="#{pessoa.id}" />
+						</p:column>
+
+						<p:column headerText="Nome" filterBy="#{pessoa.nome}">
+							<h:outputText value="#{pessoa.nome}" />
+						</p:column>
+
+						<p:column headerText="Email" filterBy="#{pessoa.email}">
+							<h:outputText value="#{pessoa.email}" />
+						</p:column>
+
+						<p:column headerText="Telefone" filterBy="#{pessoa.telefone}">
+							<h:outputText value="#{pessoa.telefone}" />
+						</p:column>
+
+						<p:column headerText="Endereço" filterBy="#{pessoa.endereco}">
+							<h:outputText value="#{pessoa.endereco}" />
+						</p:column>
+
+						<p:column headerText="CPF" filterBy="#{pessoa.cpf}">
+							<h:outputText value="#{pessoa.cpf}" />
+						</p:column>
+
+						<p:column headerText="CNPJ" filterBy="#{pessoa.cnpj}">
+							<h:outputText value="#{pessoa.cnpj}" />
+						</p:column>
+
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
+		</p:panel>
+	</h:form>
+</body>
+</html>

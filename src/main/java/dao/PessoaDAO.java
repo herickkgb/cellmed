@@ -71,4 +71,19 @@ public class PessoaDAO extends GenericDAO<Long, Pessoa>{
             em.close();
         }
     }
+
+	public void excluir(Pessoa pessoa) {
+		 EntityManager em = factory.createEntityManager();
+	        try {
+	            em.getTransaction().begin();
+	            Pessoa pessoaDel = em.find(Pessoa.class, pessoa.getId());
+	            if (pessoaDel != null) {
+	                em.remove(pessoaDel);
+	            }
+	            em.getTransaction().commit();
+	        } finally {
+	            em.close();
+	        }
+		
+	}
 }

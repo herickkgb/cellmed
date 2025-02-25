@@ -1,33 +1,147 @@
-/* cores principais */
-:root {
-    --primary-blue: #1877F2; /* Azul secundário */
-    --secondary-background: #FFFFFF; /* Fundo branco */
-    --input-background: #F4F4F4; /* Fundo do campo de pesquisa */
-    --input-border: #1877F2; /* Borda do campo de pesquisa */
-    --button-blue: #1877F2; /* Cor do botão de logout */
+/* Fontes */
+.roboto-regular {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 400;
 }
 
-/* Estilo da barra de navegação */
-.megaMenu {
-    background-color: var(--secondary-background);
-    color: #333333;
+.roboto-bold {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 700;
 }
 
-/* Estilo dos itens do menu */
-.megaMenu .ui-menuitem {
-    color: var(--primary-blue);
+/* Layout Principal */
+.layout-wrapper {
+	display: flex;
+	height: 100vh;
+	background: #f8f9fa;
 }
 
-/* Estilo de fundo do botão de logout */
-.ui-button-info {
-    background-color: var(--button-blue);
-    color: #FFFFFF;
-    border-color: var(--button-blue);
+.sidebar {
+	width: 260px;
+	background: white;
+	border-right: 1px solid #e0e0e0;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	border-top: 1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
 }
 
-/* Estilo do campo de pesquisa */
-.ui-inputtext {
-    background-color: var(--input-background);
-    color: #333333;
-    border-color: var(--input-border);
+.main-content {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+
 }
+
+.header {
+	background: white;
+	padding: 15px 20px;
+	border-bottom: 1px solid #e0e0e0;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-top: 1px solid #e0e0e0;
+	border-right: 1px solid #e0e0e0;
+}
+
+.content-container {
+	background: white;
+	border-radius: 10px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+	margin: 20px;
+	border: 1px solid #e0e0e0;
+		border-right: 1px solid #e0e0e0;
+}
+
+/* Menu Compacto */
+.ui-menu.ui-menu-dynamic {
+	padding: 0 !important;
+	border: none !important;
+}
+
+.menu-group-header>.ui-submenu-header {
+	background: transparent !important;
+	text-transform: uppercase !important;
+	font-size: 0.50rem !important;
+	letter-spacing: 0.5px !important;
+	color: #607d8b !important;
+	padding: 10px 12px !important;
+	border: none !important;
+}
+
+.menu-item>.ui-menuitem-link {
+	padding: 8px 16px !important;
+	margin: 2px 0 !important;
+	border-radius: 4px !important;
+	font-size: 0.9rem !important;
+}
+
+.ui-menuitem-icon {
+	vertical-align: middle !important;
+	margin-right: 12px !important;
+	font-size: 1rem !important;
+}
+
+.ui-submenu-header .ui-submenu-icon {
+	display: none !important;
+}
+
+.ui-menuitem-link:hover {
+	background: #f5f5f5 !important;
+	transition: background 0.2s;
+}
+
+.compact-menu .ui-menu-list {
+	gap: 2px !important;
+}
+
+/* Ajustes Finais */
+.ui-widget-content {
+	background: transparent !important;
+	border: none !important;
+}
+
+.border-circle {
+	border-radius: 50%;
+}
+
+ /* DIALOG PROCESS */
+.dlgModalAjaxProcess_content {
+	height: 80px; 
+	position: relative; 
+	top: 15px;
+}
+
+.ui-dialog-content {
+    background-color: #f8f9fa !important;
+}
+
+.custom-dialog .ui-dialog-footer {
+    background-color: #F5F5F5 !important;
+}
+
+/* Estiliza o rodapé do diálogo */
+.custom-dialog .ui-dialog-footer {
+    background-color: #F5F5F5 !important;
+    padding: 10px; /* Ajuste conforme necessário */
+    border-top: 1px solid #ddd; /* Opcional para uma separação visual */
+}
+
+
+/* Remove espaçamento entre as bordas das células */
+.ui-datatable table {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+}
+
+/* Reduz o padding nas células (vertical e horizontal) */
+.ui-datatable table td,
+.ui-datatable table th {
+    padding: 8px 8px !important; /* Ajuste aqui para ficar menor/maior */
+}
+
+
+

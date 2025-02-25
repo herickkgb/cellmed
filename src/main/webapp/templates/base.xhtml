@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:passthrough="http://xmlns.jcp.org/jsf/passthrough">
+  <h:head>
+    <title>CellMed</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&amp;family=Roboto:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Recursos JSF -->
+    <h:outputStylesheet name="primeflex/primeflex.css" />
+    <h:outputStylesheet name="primeicons/primeicons.css" />
+    <h:outputStylesheet library="css" name="styles.css" />
+  </h:head>
+  <h:body>
+    <div class="layout-wrapper">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div style="height: 95vh; width: 230px; overflow: auto;">
+          <div class="flex flex-column align-items-center mb-4" align="center">
+            <h:graphicImage library="images" name="simbolo-de-conserto-de-telefone.png"
+                            alt="Ícone de Conserto de Telefone" width="50" height="50"/>
+            <h1 style="font-size: 1.5rem; color: #2196f3;" class="roboto-regular">CellMed</h1>
+          </div>
+
+          <!-- Menu com seta para baixo, fundo transparente e linhas -->
+          <p:panelMenu styleClass="w-full compact-menu" style="border: none;">
+            <!-- DASHBOARD -->
+            <p:submenu label="DASHBOARD" icon="pi pi-home" expanded="true">
+              <p:menuitem value="Início" icon="pi pi-home" url="#" styleClass="menu-item" />
+              <p:menuitem value="Notificações" icon="pi pi-bell" url="#" styleClass="menu-item" />
+              <p:menuitem value="Relatórios" icon="pi pi-file" url="#" styleClass="menu-item" />
+            </p:submenu>
+
+            <!-- MANUTENÇÃO -->
+            <p:submenu label="MANUTENÇÃO" icon="pi pi-wrench" expanded="true">
+              <p:menuitem value="Reparos" icon="pi pi-wrench" url="#" styleClass="menu-item" />
+              <p:menuitem value="Orçamentos" icon="pi pi-calculator" url="#" styleClass="menu-item" />
+              <p:menuitem value="Agendamentos" icon="pi pi-calendar-plus" url="#" styleClass="menu-item" />
+              <p:menuitem value="Histórico de Serviços" icon="pi pi-history" url="#" styleClass="menu-item" />
+            </p:submenu>
+
+            <!-- COMERCIAL -->
+            <p:submenu label="COMERCIAL" icon="pi pi-shopping-cart" expanded="true">
+              <p:menuitem value="Venda de Celulares" icon="pi pi-shopping-cart" url="#" styleClass="menu-item" />
+              <p:menuitem value="Peças e Acessórios" icon="pi pi-cog" url="#" styleClass="menu-item" />
+              <p:menuitem value="Anúncios" icon="pi pi-bullhorn" url="#" styleClass="menu-item" />
+            </p:submenu>
+
+            <!-- CONFIGURAÇÕES -->
+            <p:submenu label="CONFIGURAÇÕES" icon="pi pi-cog" expanded="true">
+              <p:menuitem value="Perfil" icon="pi pi-user" url="#" styleClass="menu-item" />
+              <p:menuitem value="Sistema" icon="pi pi-sliders-h" url="#" styleClass="menu-item" />
+            </p:submenu>
+          </p:panelMenu>
+        </div>
+
+        <!-- Rodapé Sidebar -->
+      </div>
+
+      <!-- Área Principal -->
+      <div class="main-content">
+        <!-- Cabeçalho -->
+        <div class="header">
+          <div>
+            <p:inputText placeholder="Search" style="width: 300px"/>
+          </div>
+          <div class="mt-auto">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h:graphicImage library="images" name="alfa.png"
+                              style="border-radius: 50%;" alt="Ícone user" width="30" height="30"/>
+              <span class="roboto-regular" style="font-size: 0.9rem;">User Admin</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Área de Conteúdo -->
+			<div class="content-container">
+				<ui:insert name="conteudo">
+					<!-- Conteúdo padrão -->
+				</ui:insert>
+			</div>
+		</div>
+    </div>
+    
+    <style>
+      /* Seta para baixo no lado direito */
+      .ui-panelmenu .ui-panelmenu-header .ui-menuitem-icon {
+        float: right;
+        margin-left: 0.5em;
+      }
+
+      /* Fundo transparente e linha na parte inferior */
+      .ui-panelmenu .ui-panelmenu-header,
+      .ui-panelmenu .ui-panelmenu-content .ui-menuitem {
+        background: transparent;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      
+      .ui-panelmenu .ui-panelmenu-header,
+      .ui-panelmenu .ui-panelmenu-content {
+        background-color: #ffffff !important;
+      }
+
+      /* Remove borda do último item */
+      .ui-panelmenu .ui-panelmenu-content .ui-menuitem:last-child {
+        border-bottom: none;
+      }
+
+      /* Estilo dos itens do menu */
+      .menu-item {
+        padding: 0.5em 1em;
+        color: #495057;
+      }
+
+      /* Efeito hover nos itens */
+      .ui-panelmenu .ui-panelmenu-content .ui-menuitem:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+    </style>
+  </h:body>
+</html>

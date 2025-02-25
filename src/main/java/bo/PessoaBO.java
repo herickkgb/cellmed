@@ -42,4 +42,12 @@ public class PessoaBO implements Serializable {
     public List<Pessoa> listarTodos() {
         return dao.listarTodos();
     }
+
+	public void excluir(Pessoa pessoa) {
+		if (pessoa.getId() == null) {
+            throw new IllegalArgumentException("ID não pode ser nulo para exclusão.");
+        }
+        dao.excluir(pessoa);
+		
+	}
 }

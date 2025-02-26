@@ -4,16 +4,16 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 
 import bo.PessoaBO;
 import model.Pessoa;
 
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class PessoaBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -33,26 +33,29 @@ public class PessoaBean implements Serializable {
 		pessoa = new Pessoa();
 		carregarPessoas();
 	}
+	
+	public void editar(Pessoa p) {
+        this.pessoa = p;
+    }
 
 	public void atualizar() {
-		try {
-			if (pessoa != null) {
-				pessoaBO.atualizar(pessoa);
-				carregarPessoas();
-				
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "Pessoa Atualizada com sucesso!!", null));
-			} else {
-
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, "Nenhuma pessoa selecionada!", null));
-			}
-		} catch (Exception e) {
-
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao Atualizar a pessoa: " + e.getMessage(), null));
-		}
+	    try {
+	        if (this.pessoa != null) {
+	            pessoaBO.atualizar(this.pessoa); 
+	            carregarPessoas();
+	            
+	            FacesContext.getCurrentInstance().addMessage(null,
+	                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Pessoa Atualizada com sucesso!!", null));
+	        } else {
+	            FacesContext.getCurrentInstance().addMessage(null,
+	                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Nenhuma pessoa selecionada!", null));
+	        }
+	    } catch (Exception e) {
+	        FacesContext.getCurrentInstance().addMessage(null,
+	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao Atualizar a pessoa: " + e.getMessage(), null));
+	    }
 	}
+
 
 	public void excluir(Pessoa pessoa) {
 		try {

@@ -46,11 +46,11 @@
                         </p:column>
 
                         <p:column headerText="Ações">
-                            <p:commandButton action="#{pessoaBean.editar(pessoa)}" update="@form" icon="pi pi-pencil" style="margin-left: 5px;" styleClass="rounded-button ui-button-info">
-                                <f:setPropertyActionListener target="#{pessoaBean.pessoa}" value="#{pessoa}" />
-                                <p:confirm type="popup" header="Confirmation" message="Editar?" icon="pi pi-exclamation-triangle" />
-                            </p:commandButton>
-                            
+							<p:commandButton update="editPessoa" icon="pi pi-pencil" actionListener="#{pessoaBean.editar(pessoa)}"
+						    oncomplete="PF('dlg').show()">
+						    <f:setPropertyActionListener target="#{pessoaBean.pessoa}" value="#{pessoa}" />
+						</p:commandButton>
+
 							<h:outputText value=" " />
 							
                             <p:commandButton update="@form" styleClass="rounded-button ui-button-danger"
@@ -67,8 +67,96 @@
 
             <p:confirmPopup global="true">
                 <p:commandButton value="Não" type="button" styleClass="ui-confirm-popup-no ui-button-flat" />
-                <p:commandButton value="Sim" type="button" styleClass="ui-confirm-popup-yes" />
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirm-popup-yes"/>
             </p:confirmPopup>
         </h:form>
+        
+        <h:form>
+</h:form>
+
+<p:dialog widgetVar="dlg" header="Editar Pessoa" modal="true" resizable="false" style="width: 50vw;">
+    <h:form id="editPessoa">
+        <p:growl id="message" showDetail="true" />
+        
+            <p:tabView>
+            
+                <p:tab title="Dados Pessoais">
+                <p:inputText id="editId" value="#{pessoaBean.pessoa.id}" rendered="false" />
+                    <div class="ui-inputgroup" style="margin-bottom: 30px;">
+                        <span class="ui-inputgroup-addon">
+                            <i class="pi pi-user"></i>
+                        </span>
+                        <span class="ui-float-label">
+                            <p:inputText id="editNome" value="#{pessoaBean.pessoa.nome}" />
+                            <p:outputLabel for="@previous" value="Nome" />
+                        </span>
+                    </div>
+
+                    <div class="ui-inputgroup" style="margin-bottom: 30px;">
+                        <span class="ui-inputgroup-addon">
+                            <i class="pi pi-envelope"></i>
+                        </span>
+                        <span class="ui-float-label">
+                            <p:inputText id="editEmail" value="#{pessoaBean.pessoa.email}" />
+                            <p:outputLabel for="@previous" value="Email" />
+                        </span>
+                    </div>
+
+                    <div class="ui-inputgroup" style="margin-bottom: 30px;">
+                        <span class="ui-inputgroup-addon">
+                            <i class="pi pi-phone"></i>
+                        </span>
+                        <span class="ui-float-label">
+                            <p:inputText id="editTelefone" value="#{pessoaBean.pessoa.telefone}" />
+                            <p:outputLabel for="@previous" value="Telefone" />
+                        </span>
+                    </div>
+
+                    <div class="ui-inputgroup" style="margin-bottom: 30px;">
+                        <span class="ui-inputgroup-addon">
+                            <i class="pi pi-home"></i>
+                        </span>
+                        <span class="ui-float-label">
+                            <p:inputText id="editEndereco" value="#{pessoaBean.pessoa.endereco}" />
+                            <p:outputLabel for="@previous" value="Endereço" />
+                        </span>
+                    </div>
+                </p:tab>
+
+                <p:tab title="Documentos">
+                    <div class="ui-inputgroup" style="margin-bottom: 30px;">
+                        <span class="ui-inputgroup-addon">
+                            <i class="pi pi-id-card"></i>
+                        </span>
+                        <span class="ui-float-label">
+                            <p:inputText id="editCPF" value="#{pessoaBean.pessoa.cpf}" />
+                            <p:outputLabel for="@previous" value="CPF" />
+                        </span>
+                    </div>
+
+                    <div class="ui-inputgroup" style="margin-bottom: 30px;">
+                        <span class="ui-inputgroup-addon">
+                            <i class="pi pi-briefcase"></i>
+                        </span>
+                        <span class="ui-float-label">
+                            <p:inputText id="editCNPJ" value="#{pessoaBean.pessoa.cnpj}" />
+                            <p:outputLabel for="@previous" value="CNPJ" />
+                        </span>
+                    </div>
+                </p:tab>
+            </p:tabView>
+            
+		<p:commandButton value="Salvar" action="#{pessoaBean.atualizar()}" 
+		    update="@form, editPessoa" icon="pi pi-check" onsuccess="PF('dlg').hide()"
+		    styleClass="rounded-button ui-button-info" process="@form">
+		</p:commandButton>
+		
+        <h:outputText value=" " />
+
+        <p:commandButton value="Cancelar" type="button" onclick="PF('dlg').hide()" styleClass="ui-button-secondary" />
+    </h:form>
+</p:dialog>
+        
+        
     </ui:define>
 </ui:composition>

@@ -6,7 +6,7 @@
     template="/templates/base.xhtml">
 
     <ui:define name="conteudo">
-        <h:form>
+        <h:form id="formPrincipal">
             <p:growl id="message" showDetail="true" />
             <p:panel header="Pessoas Registradas" style="height: 85vh; overflow: auto;">
                 <p:tab title="Lista de Pessoas" icon="pi-users">
@@ -147,7 +147,7 @@
             </p:tabView>
             
 		<p:commandButton value="Salvar" action="#{pessoaBean.atualizar()}" 
-		    update="@form, editPessoa" icon="pi pi-check" onsuccess="PF('dlg').hide()"
+		    update="@form, editPessoa, formPrincipal" icon="pi pi-check" onsuccess="PF('dlg').hide()"
 		    styleClass="rounded-button ui-button-info" process="@form">
 		</p:commandButton>
 		

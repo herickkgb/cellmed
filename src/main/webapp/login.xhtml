@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <!-- Corrigido: Usar h:head ao invés de head comum -->
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Login</title>
+        
+        <!-- Estilos movidos para dentro do h:head -->
+        <style type="text/css">
+            .pi {
+                margin-right: 10px;
+            }
+            .social-login .ui-button {
+                padding: 12px;
+                color: white;
+                border-radius: 6px;
+                transition: filter 0.3s;
+            }
+            .social-login .ui-button:hover {
+                filter: brightness(0.95);
+            }
+        </style>
+    </h:head>
+
+    <body>
+        <div class="login-container" style="max-width: 500px; margin: 50px auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.1);">
+            <p:growl id="msg" showDetail="true" />
+            
+            <!-- Cabeçalho com Logo -->
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1 style="color: #1877f2; font-size: 2.5rem; margin: 0;">
+                    <i class="pi pi-phone" style="font-size: 2rem; vertical-align: middle;">
+                    </i>
+                    CellMed
+                </h1>
+                <p style="color: #65676b; margin-top: 0.5rem;">O cuidado que o seu telemóvel merece!</p>
+            </div>
+
+            <h:form>
+                <!-- Formulário Principal -->
+                <div style="margin-bottom: 1.5rem;">
+                    <p:outputLabel for="email" value="E-mail ou telefone" style="display: block; margin-bottom: 0.5rem; color: #606770;"/>
+                    <p:inputText id="email" style="width: 100%; padding: 12px; font-size: 16px; border: 1px solid #dddfe2; border-radius: 6px;"
+                        value="#{loginBean.email}"  placeholder="exemplo@email.com"/>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <p:outputLabel for="senha" value="Senha" style="display: block; margin-bottom: 0.5rem; color: #606770;"/>
+                    <p:password id="senha" style="width: 100%; padding: 12px; font-size: 16px; border: 1px solid #dddfe2; border-radius: 6px;"
+                            value="#{loginBean.password}" feedback="false"/>
+                </div>
+
+                <p:commandButton value="Entrar" 
+                 style="width: 100%; background: #1877f2; border-color: #1877f2; font-size: 1.1rem; padding: 12px; font-weight: bold;"
+                 onmouseover="this.style.backgroundColor='#166fe5'" 
+                 onmouseout="this.style.backgroundColor='#1877f2'"
+                 action="#{loginBean.login}"
+                 update="msg"
+                 ajax="true" />
+
+                <!-- Links de Apoio -->
+                <div style="text-align: center; margin: 1rem 0;">
+                    <p:link value="Esqueceu a senha?"
+                          style="color: #1877f2; text-decoration: none; font-size: 0.9rem;"/>
+                </div>
+
+                <!-- Divisor -->
+                <div style="display: flex; align-items: center; margin: 2rem 0;">
+                    <hr style="flex-grow: 1; border-color: #dadde1;"/>
+                    <span style="padding: 0 1rem; color: #606770;">OU</span>
+                    <hr style="flex-grow: 1; border-color: #dadde1;"/>
+                </div>
+
+                <!-- Criar Nova Conta -->
+                <div style="text-align: center; margin-top: 2rem; border-top: 1px solid #dadde1; padding-top: 1rem;">
+				<p:commandLink value="Criar nova conta"
+				    style="color: #1877f2; text-decoration: none; font-weight: bold; font-size: 1rem;"
+				    oncomplete="PF('dlgRegistro').show();" process="@this"
+				    update=":dialogRegistro" />
+
+			</div>
+            </h:form>
+            
+            <!-- Diálogo com o formulário de Registro -->
+            <p:dialog id="dialogRegistro" header="Registro" widgetVar="dlgRegistro" modal="true" resizable="false" closable="true" draggable="false">
+                <h:form id="formRegistro">
+                    <p:messages />
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="nome" value="Nome:" />
+                        <p:inputText id="nome" value="#{registroBean.nome}" required="true" />
+                        
+                        <p:outputLabel for="email" value="Email:" />
+                        <p:inputText  id="email" value="#{registroBean.email}" required="true" />
+                        
+                        <p:outputLabel for="telefone" value="Telefone:" />
+                        <p:inputText id="telefone" value="#{registroBean.telefone}" />
+                        
+                        <p:outputLabel for="endereco" value="Endereço:" />
+                        <p:inputText id="endereco" value="#{registroBean.endereco}" />
+                        
+                        <p:outputLabel for="cpf" value="CPF:" />
+                        <p:inputText id="cpf" value="#{registroBean.cpf}" required="true" />
+                        
+                        <p:outputLabel for="cnpj" value="CNPJ:" />
+                        <p:inputText id="cnpj" value="#{registroBean.cnpj}" />
+                        
+                        <p:outputLabel for="senha" value="Senha:" />
+                        <p:password id="senha" value="#{registroBean.senha}" required="true" />
+                    </p:panelGrid>
+                    
+                    <p:growl id="msgs" showDetail="true" />
+					<p:commandButton value="Registrar" action="#{registroBean.registrar}" update=":formRegistro, msgs" style="margin-top:10px;" onsuccess="PF('dlgRegistro').hide();" />
+	
+                </h:form>
+            </p:dialog>
+        </div>
+    </body>
+</html>

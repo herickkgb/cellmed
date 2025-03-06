@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 
 import model.Pessoa;
@@ -84,6 +85,20 @@ public class PessoaDAO extends GenericDAO<Long, Pessoa>{
 	        } finally {
 	            em.close();
 	        }
+		
+	}
+
+	public Pessoa findByEmail(String email) {
+        EntityManager em = factory.createEntityManager();
+        try {
+            return em.createQuery("SELECT p FROM Pessoa p WHERE LOWER(p.email) = :email", Pessoa.class)
+                    .setParameter("email", email.toLowerCase())
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
 		
 	}
 }

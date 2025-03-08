@@ -1,53 +1,50 @@
 package bo;
-import java.io.Serializable;
+
 import java.util.List;
+import java.util.Objects;
 
 import dao.PessoaDAO;
+import generics.GenericBO;
 import model.Pessoa;
 
-public class PessoaBO implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class PessoaBO extends GenericBO {
     
-    private PessoaDAO dao;
+    private static final long serialVersionUID = 1L;
+    private final PessoaDAO dao;
 
     public PessoaBO() {
         this.dao = new PessoaDAO();
     }
 
     public void salvar(Pessoa pessoa) {
-        if (pessoa.getNome() == null || pessoa.getNome().isEmpty()) {
+        Objects.requireNonNull(pessoa, "A pessoa não pode ser nula.");
+        if (pessoa.getNome() == null || pessoa.getNome().trim().isEmpty()) {
             throw new IllegalArgumentException("O nome da pessoa não pode ser vazio.");
         }
         dao.salvar(pessoa);
     }
 
     public void atualizar(Pessoa pessoa) {
-        if (pessoa.getId() == null) {
-            throw new IllegalArgumentException("ID da pessoa não pode ser nulo para atualização.");
-        }
+        Objects.requireNonNull(pessoa, "A pessoa não pode ser nula.");
+        Objects.requireNonNull(pessoa.getId(), "ID da pessoa não pode ser nulo para atualização.");
         dao.atualizar(pessoa);
     }
 
     public void excluir(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID não pode ser nulo para exclusão.");
-        }
-        dao.excluir(id);
+        dao.excluir(Objects.requireNonNull(id, "ID não pode ser nulo para exclusão."));
     }
 
     public Pessoa buscarPorId(Long id) {
-        return dao.buscarPorId(id);
+        return dao.buscarPorId(Objects.requireNonNull(id, "ID não pode ser nulo para busca."));
     }
 
     public List<Pessoa> listarTodos() {
         return dao.listarTodos();
     }
 
-	public void excluir(Pessoa pessoa) {
-		if (pessoa.getId() == null) {
-            throw new IllegalArgumentException("ID não pode ser nulo para exclusão.");
-        }
-        dao.excluir(pessoa);
-		
-	}
+    public void excluir(Pessoa pessoa) {
+        Objects.requireNonNull(pessoa, "A pessoa não pode ser nula.");
+        Objects.requireNonNull(pessoa.getId(), "ID não pode ser nulo para exclusão.");
+        dao.delete(pessoa);
+    }
 }

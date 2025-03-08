@@ -1,20 +1,13 @@
-package dao;
+package generics;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 
 import model.IModel;
-import javax.persistence.Persistence;
-
 
 /**
  * Classe genérica para trabalhar com a persistência de dados
@@ -24,79 +17,95 @@ import javax.persistence.Persistence;
  */
 public class GenericDAO<PK, T extends IModel> implements IGenericDAO {
 
-	private static final long serialVersionUID = 1L;
-	protected EntityManager entityManager;
-    private static EntityManagerFactory entityManagerFactory;
+    private static final long serialVersionUID = 1L;
+    
+    private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("cellmed");
+    
+    protected EntityManager entityManager;
 
-    // Construtor
+    // Construtor padrão que inicializa o EntityManager
     public GenericDAO() {
-        // Se não existir, cria a EntityManagerFactory
-        if (entityManagerFactory == null) {
-            entityManagerFactory = Persistence.createEntityManagerFactory("cellmed");
-        }
+        this.entityManager = entityManagerFactory.createEntityManager();
     }
 
-    // Construtor que aceita EntityManager
+    // Construtor que aceita EntityManager (para injeção ou testes)
     public GenericDAO(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
-    // Obtém o EntityManager atual
+    // Obtém um EntityManager válido
     public EntityManager getEntityManager() {
-        if (this.entityManager == null || !this.entityManager.isOpen()) {
-            // Cria uma nova instância de EntityManager se necessário
-            this.entityManager = entityManagerFactory.createEntityManager();  // Obtém o EntityManager da fábrica
+        if (entityManager == null || !entityManager.isOpen()) {
+            entityManager = entityManagerFactory.createEntityManager();
         }
-        return this.entityManager;
+        return entityManager;
     }
 
-    // Busca uma entidade por ID
-    @SuppressWarnings("unchecked")
+    // Busca uma entidade pelo ID
     public T getById(PK pk) {
-        return (T) getEntityManager().find(getTypeClass(), pk);
+        return getEntityManager().find(getTypeClass(), pk);
     }
 
-    // Salva uma entidade
+    // Salva uma entidade (com transação)
     public void save(T entity) {
-        getEntityManager().persist(entity);
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(entity);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
     }
 
-    // Atualiza uma entidade
+    // Atualiza uma entidade (com transação)
     public void update(T entity) {
-        getEntityManager().merge(entity);
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.merge(entity);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
     }
 
-    // Exclui uma entidade
+    // Exclui uma entidade (com transação)
     public void delete(T entity) {
-        getEntityManager().remove(entity);
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.remove(em.contains(entity) ? entity : em.merge(entity));
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
     }
 
     // Retorna todas as entidades da classe
-    @SuppressWarnings("unchecked")
     public List<T> findAll() {
-        return getEntityManager().createQuery("FROM " + getTypeClass().getName()).getResultList();
-    }
-
-    // Executa uma consulta HQL e retorna os resultados
-    @SuppressWarnings("unchecked")
-    public List<T> listByHql(String hql) {
-        return getEntityManager().createQuery(hql).getResultList();
-    }
-
-    // Executa uma consulta HQL com paginação
-    @SuppressWarnings("unchecked")
-    public List<T> listByHql(String hql, int first, int max) {
-        Query q = getEntityManager().createQuery(hql);
-        q.setFirstResult(first);
-        q.setMaxResults(max);
-        return q.getResultList();
+        return getEntityManager()
+                .createQuery("FROM " + getTypeClass().getName(), getTypeClass())
+                .getResultList();
     }
 
     // Retorna o tipo da classe de persistência
-    private Class<?> getTypeClass() {
-        Class<?> clazz = (Class<?>) ((ParameterizedType) this.getClass().getGenericSuperclass())
+    private Class<T> getTypeClass() {
+        return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
                 .getActualTypeArguments()[1];
-        return clazz;
+    }
+
+    // Executa uma consulta HQL e retorna os resultados
+    public List<T> listByHql(String hql) {
+        return getEntityManager().createQuery(hql, getTypeClass()).getResultList();
+    }
+
+    // Executa uma consulta HQL com paginação
+    public List<T> listByHql(String hql, int first, int max) {
+        Query q = getEntityManager().createQuery(hql, getTypeClass());
+        q.setFirstResult(first);
+        q.setMaxResults(max);
+        return q.getResultList();
     }
 
     // Executa uma consulta HQL e retorna um único resultado
@@ -104,22 +113,21 @@ public class GenericDAO<PK, T extends IModel> implements IGenericDAO {
         return getEntityManager().createQuery(hql).getSingleResult();
     }
 
-    // Executa uma consulta SQL nativa e mapeia o retorno para a classe
+    // Executa uma query SQL nativa e converte para classe fornecida
     public <T> T vincularRetornoAoConstrutor(Class<T> tipo, Object[] colunasRetornadas) {
         List<Class<?>> tupleTypes = new ArrayList<>();
         for (Object field : colunasRetornadas) {
             tupleTypes.add(field.getClass());
         }
         try {
-            Constructor<T> ctor = tipo.getConstructor(tupleTypes.toArray(new Class<?>[colunasRetornadas.length]));
+            Constructor<T> ctor = tipo.getConstructor(tupleTypes.toArray(new Class<?>[0]));
             return ctor.newInstance(colunasRetornadas);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    // Executa uma query nativa e mapeia o retorno para a classe
-    @SuppressWarnings("unchecked")
+    // Executa uma consulta SQL nativa e retorna uma lista de objetos mapeados
     public <T> List<T> getResultListParaClasseQueryNativa(Query query, Class<T> tipo) {
         List<Object[]> records = query.getResultList();
         List<T> result = new ArrayList<>();
@@ -130,7 +138,6 @@ public class GenericDAO<PK, T extends IModel> implements IGenericDAO {
     }
 
     // Executa uma consulta SQL nativa e retorna uma lista de objetos mapeados
-    @SuppressWarnings("unchecked")
     public <T> List<T> getResultListParaClasseQueryNativa(String sql, Class<T> tipo) {
         Query query = getEntityManager().createNativeQuery(sql);
         return getResultListParaClasseQueryNativa(query, tipo);
@@ -141,21 +148,17 @@ public class GenericDAO<PK, T extends IModel> implements IGenericDAO {
         Query query = getEntityManager().createNativeQuery(sql);
         query.setMaxResults(1);
         List<T> resultados = getResultListParaClasseQueryNativa(query, tipo);
-        if (resultados != null && !resultados.isEmpty()) {
+        if (!resultados.isEmpty()) {
             return resultados.get(0);
         }
-        throw new NoResultException("Não foram encontrados registros.");
+        throw new NoResultException("Nenhum registro encontrado.");
     }
 
     // Executa uma query HQL com parâmetros e retorna uma lista de resultados
-    @SuppressWarnings("hiding")
     public <T> List<T> recuperarListaParaQuery(StringBuilder hql, Map<Integer, Object> parametros, Class<T> tipo) {
         TypedQuery<T> q = getEntityManager().createQuery(hql.toString(), tipo);
-        if (parametros != null && !parametros.isEmpty()) {
-            for (Integer indiceParametro : parametros.keySet()) {
-                Object value = parametros.get(indiceParametro);
-                q.setParameter(indiceParametro, value);
-            }
+        if (parametros != null) {
+            parametros.forEach(q::setParameter);
         }
         try {
             return q.getResultList();

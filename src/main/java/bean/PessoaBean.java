@@ -2,95 +2,90 @@ package bean;
 
 import java.io.Serializable;
 import java.util.List;
-
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
 import javax.faces.bean.ViewScoped;
-
+import javax.faces.context.FacesContext;
 import bo.PessoaBO;
 import model.Pessoa;
 
 @ManagedBean
 @ViewScoped
 public class PessoaBean implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private PessoaBO pessoaBO;
-	private Pessoa pessoa;
-	private List<Pessoa> pessoas;
+    private PessoaBO pessoaBO;
+    private Pessoa pessoa;
+    private List<Pessoa> pessoas;
 
-	@PostConstruct
-	public void init() {
-		pessoaBO = new PessoaBO();
-		pessoa = new Pessoa();
-		carregarPessoas();
-	}
+    @PostConstruct
+    public void init() {
+        pessoaBO = new PessoaBO();
+        pessoa = new Pessoa();
+        carregarPessoas();
+    }
 
-	public void salvar() {
-		pessoaBO.salvar(pessoa);
-		pessoa = new Pessoa();
-		carregarPessoas();
-	}
-	
-	public void editar(Pessoa p) {
+    public void salvar() {
+        try {
+            pessoaBO.salvar(pessoa);
+            pessoa = new Pessoa();
+            carregarPessoas();
+            adicionarMensagem(FacesMessage.SEVERITY_INFO, "Pessoa salva com sucesso!");
+        } catch (Exception e) {
+            adicionarMensagem(FacesMessage.SEVERITY_ERROR, "Erro ao salvar a pessoa: " + e.getMessage());
+        }
+    }
+
+    public void editar(Pessoa p) {
         this.pessoa = p;
     }
 
-	public void atualizar() {
-	    try {
-	        if (this.pessoa != null) {
-	            pessoaBO.atualizar(this.pessoa); 
-	            carregarPessoas();
-	            
-	            FacesContext.getCurrentInstance().addMessage(null,
-	                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Pessoa Atualizada com sucesso!!", null));
-	        } else {
-	            FacesContext.getCurrentInstance().addMessage(null,
-	                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Nenhuma pessoa selecionada!", null));
-	        }
-	    } catch (Exception e) {
-	        FacesContext.getCurrentInstance().addMessage(null,
-	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao Atualizar a pessoa: " + e.getMessage(), null));
-	    }
-	}
+    public void atualizar() {
+        if (pessoa == null) {
+            adicionarMensagem(FacesMessage.SEVERITY_WARN, "Nenhuma pessoa selecionada!");
+            return;
+        }
+        try {
+            pessoaBO.atualizar(pessoa);
+            carregarPessoas();
+            adicionarMensagem(FacesMessage.SEVERITY_INFO, "Pessoa atualizada com sucesso!");
+        } catch (Exception e) {
+            adicionarMensagem(FacesMessage.SEVERITY_ERROR, "Erro ao atualizar a pessoa: " + e.getMessage());
+        }
+    }
 
+    public void excluir(Pessoa pessoa) {
+        if (pessoa == null) {
+            adicionarMensagem(FacesMessage.SEVERITY_WARN, "Nenhuma pessoa selecionada!");
+            return;
+        }
+        try {
+            pessoaBO.excluir(pessoa);
+            carregarPessoas();
+            adicionarMensagem(FacesMessage.SEVERITY_INFO, "Pessoa excluída com sucesso!");
+        } catch (Exception e) {
+            adicionarMensagem(FacesMessage.SEVERITY_ERROR, "Erro ao excluir a pessoa: " + e.getMessage());
+        }
+    }
 
-	public void excluir(Pessoa pessoa) {
-		try {
-			if (pessoa != null) {
-				pessoaBO.excluir(pessoa);
-				carregarPessoas();
-				
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "Pessoa excluída com sucesso!!", null));
-			} else {
+    private void adicionarMensagem(FacesMessage.Severity severidade, String mensagem) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severidade, mensagem, null));
+    }
 
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, "Nenhuma pessoa selecionada!", null));
-			}
-		} catch (Exception e) {
+    private void carregarPessoas() {
+        pessoas = pessoaBO.listarTodos();
+    }
 
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao excluir a pessoa: " + e.getMessage(), null));
-		}
-	}
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
 
-	public void carregarPessoas() {
-		pessoas = pessoaBO.listarTodos();
-	}
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
+    }
 
-	public Pessoa getPessoa() {
-		return pessoa;
-	}
-
-	public void setPessoa(Pessoa pessoa) {
-		this.pessoa = pessoa;
-	}
-
-	public List<Pessoa> getPessoas() {
-		return pessoas;
-	}
-
+    public List<Pessoa> getPessoas() {
+        return pessoas;
+    }
 }
